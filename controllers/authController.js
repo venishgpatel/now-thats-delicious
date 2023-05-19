@@ -1,5 +1,4 @@
 const passport = require('passport');
-const mongoose = require('mongoose');
 const User = require('../models/User');
 const crypto = require('crypto');
 const mail = require('../handlers/mail');
@@ -11,10 +10,14 @@ exports.login = passport.authenticate('local', {
   successFlash: 'You are now logged in.'
 });
 
-exports.logout = (req, res) => {
-  req.logout();
-  req.flash('success', 'You are now logged out.');
-  res.redirect('/');
+exports.logout = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.flash('success', 'You are now logged out.');
+    res.redirect('/');
+  });
 };
 
 exports.isLoggedIn = (req, res, next) => {

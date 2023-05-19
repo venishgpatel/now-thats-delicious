@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const { body, validationResult } = require('express-validator');
 
 exports.loginForm = (req, res) => {
   res.render('login', {
@@ -14,22 +15,22 @@ exports.registerForm = (req, res) => {
 };
 
 exports.validateRegister = (req, res, next) => {
-  req.sanitizeBody('name');
+  body('name');
 
-  req.checkBody('name', 'You must provide a name.').notEmpty();
-  req.checkBody('email', 'That email is not valid.').isEmail();
-  req.sanitizeBody('email').normalizeEmail({
+  body('name', 'You must provide a name.').notEmpty();
+  body('email', 'That email is not valid.').isEmail();
+  body('email').normalizeEmail({
     remove_dots: false,
     remove_extension: false,
     gmail_remove_subaddress: false
   });
-  req.checkBody('password', 'Password cannot be blank.').notEmpty();
-  req.checkBody('password-confirm', 'Confirm-Password cannot be blank.').notEmpty();
-  req.checkBody('password-confirm', 'Opps! Your passwords do not match').equals(req.body.password);
+  body('password', 'Password cannot be blank.').notEmpty();
+  body('password-confirm', 'Confirm-Password cannot be blank.').notEmpty();
+  body('password-confirm', 'Opps! Your passwords do not match').equals(req.body.password);
 
-  const errors = req.validationErrors();
+  const errors = validationResult(req).array();
 
-  if (errors) {
+  if (Array.isArray(errors) && errors.length) {
     req.flash('error', errors.map(err => err.msg));
     res.render('register', {
       title: 'Register',
