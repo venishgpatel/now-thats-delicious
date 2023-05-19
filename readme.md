@@ -45,4 +45,4 @@ npm run blowitallaway
 
 ## Creds
 
-This app was developed through the help of a wonderful course by [Wes Bos](https://wesbos.com) entitled [Learn Node](learnnode.com).
+This app was developed through the help of a wonderful course by [Wes Bos](https://wesbos.com) entitled [Learn Node](https://learnnode.com/).
